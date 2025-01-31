@@ -41,7 +41,6 @@ marker = find_marker(ref_image)
 if marker is None:
     raise ValueError("Failed to find marker in the reference image.")
 
-# Show the edged image
 gray = cv2.cvtColor(ref_image, cv2.COLOR_BGR2GRAY)
 gray = cv2.GaussianBlur(gray, (5, 5), 0)
 edged = cv2.Canny(gray, 35, 125)
@@ -49,7 +48,6 @@ cv2.imshow("Edged Image", edged)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
-# Draw the detected contour
 ref_contour = cv2.boxPoints(marker)
 ref_contour = np.int32(ref_contour)
 cv2.drawContours(ref_image, [ref_contour], -1, (0, 255, 0), 2)
@@ -57,13 +55,11 @@ cv2.imshow("Reference Contours", ref_image)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
-# Print the detected width and calculated focal length
 detected_width = marker[1][0]
 focalLength = (detected_width * KNOWN_DISTANCE) / KNOWN_WIDTH
 print(f"Detected Width (pixels): {detected_width}")
 print(f"Calculated Focal Length: {focalLength}")
 
-# --------------- CONTINUE WITH VIDEO CAPTURE ----------------
 cap = cv2.VideoCapture(0) 
 if not cap.isOpened():
     raise RuntimeError("Failed to start the video capture.")
@@ -93,6 +89,10 @@ while True:
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
+
+print(focalLength)
+cap.release()
+cv2.destroyAllWindows()
 
 print(focalLength)
 cap.release()
