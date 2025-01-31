@@ -16,15 +16,13 @@ def find_marker(image):
         return None
     c = max(cnts, key=cv2.contourArea)
     if cnts:
-    # Filter contours by size and aspect ratio
-     filtered_cnts = [c for c in cnts if cv2.contourArea(c) > 500]  # Minimum size threshold
+     filtered_cnts = [c for c in cnts if cv2.contourArea(c) > 500] 
     if filtered_cnts:
         c = max(filtered_cnts, key=cv2.contourArea)
         rect = cv2.minAreaRect(c)
 
-        # Ensure the detected rectangle meets aspect ratio criteria
         width, height = rect[1]
-        if 0.5 < width / height < 2.0:  # Adjust ratio as per marker's shape
+        if 0.5 < width / height < 2.0:  
             return rect
     return cv2.minAreaRect(c)
     
@@ -32,7 +30,6 @@ def find_marker(image):
 def distance_to_camera(knownWidth, focalLength, perWidth):
     return (knownWidth * focalLength) / perWidth
 
-# Load the reference image to calculate the focal length
 ref_image = cv2.imread("pick.jpg")
 if ref_image is None:
     raise ValueError("Reference image 'pick.jpg' not found.")
@@ -43,8 +40,7 @@ focalLength = (marker[1][0] * KNOWN_DISTANCE) / KNOWN_WIDTH
 
 print(focalLength)
 
-# Start video capture
-cap = cv2.VideoCapture(0)  # Use 0 for the default camera
+cap = cv2.VideoCapture(0) 
 if not cap.isOpened():
     raise RuntimeError("Could not start the video capture.")
 
@@ -58,7 +54,6 @@ while True:
     if marker is not None:
         cm = distance_to_camera(KNOWN_WIDTH, focalLength, marker[1][0])
 
-        # Draw the bounding box and display the distance
         box = cv2.boxPoints(marker)
         box = np.int32(box)
         cv2.drawContours(frame, [box], -1, (0, 255, 0), 2)
@@ -66,7 +61,6 @@ while True:
 
     cv2.imshow("Live Feed", frame)
 
-    # Press 'q' to exit the loop
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
