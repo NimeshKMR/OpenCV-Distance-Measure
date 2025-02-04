@@ -14,8 +14,6 @@ def find_marker(image):
     edged = cv2.Canny(gray, 35, 125)
     cnts = cv2.findContours(edged.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
     cnts = imutils.grab_contours(cnts)
-    cv2.imshow("Edges", edged)
-    cv2.imshow("Contours", cv2.drawContours(image.copy(), cnts, -1, (0, 255, 0), 2))
     
     if len(cnts) == 0:
         return None
